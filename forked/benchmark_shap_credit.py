@@ -16,7 +16,7 @@ import os
 from credit_dataset.credit_model import mlp, Model_for_shap
 # from credit_model import mlp, Model_for_shap
 from train_credit import load_data, validate, save_checkpoint
-# from captum.attr import *
+from captum.attr import *
 from shap_utils import brute_force_shapley
 
 
