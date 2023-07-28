@@ -19,6 +19,7 @@ import os
 from reproduce.data_model import mlp
 from reproduce.data_read import Adult, Credit
 import argparse
+from reproduce.parameters import raw_data_path, train_save_path
 
 
 def train_epoch(model, train_loader, criterion, optimizer):
@@ -92,14 +93,22 @@ if __name__ == "__main__":
 
   if args.dataset == 'adult':
     case = Adult()
+  elif args.dataset == 'credit':
+    case = Credit()
+  path = raw_data_path(args.dataset)
+
+  '''
+  if args.dataset == 'adult':
+    case = Adult()
     path = './adult_dataset/adult.csv'
-    ckpt = "./adult_dataset/model_adult_m_1_1_5_r_"
+    # ckpt = "./adult_dataset/model_adult_m_1_1_5_r_"
   elif args.dataset == 'credit':
     case = Credit()
     path = './credit_dataset/bank-full-dataset.csv'
-    ckpt = "./credit_dataset/model_credit_m_1_r_"
+    # ckpt = "./credit_dataset/model_credit_m_1_r_"
 
   ckpt = './ckpts/model_{}_m_1_r_'.format(args.dataset)
+  '''
 
   datasets_torch, cate_attrib_book, dense_feat_index, \
       sparse_feat_index = case.load_data(
@@ -135,7 +144,9 @@ if __name__ == "__main__":
                           criterion, optimizer,  # max_epoch=20)
                           max_epoch=args.max_epoch)
 
-  save_checkpoint(ckpt + str(round_num) + ".pth.tar",
+  # save_checkpoint(ckpt + str(round_num) + ".pth.tar",
+  ckpt = train_save_path(args.dataset, round_num)
+  save_checkpoint(ckpt,
                   round_index=round_num,
                   state_dict=best_state_dict,
                   layer_num=model.layer_num,

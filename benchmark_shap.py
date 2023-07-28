@@ -21,6 +21,8 @@ from train_data import validate, save_checkpoint
 from captum.attr import *
 from shap_utils import brute_force_shapley
 
+from reproduce.parameters import train_save_path
+
 
 def brute_force_kernel_shap(model, data_loader, reference):
   # model.eval()
@@ -56,8 +58,9 @@ if __name__ == "__main__":
   elif args.dataset == 'credit':
     path = "./credit_dataset/model_credit_m_1_r_"
   '''
-  path = "./ckpts/model_{}_m_1_r_".format(args.dataset)
-  model_checkpoint_fname = path + "0.pth.tar"
+  # path = "./ckpts/model_{}_m_1_r_".format(args.dataset)
+  # model_checkpoint_fname = path + "0.pth.tar"
+  model_checkpoint_fname = train_save_path(args.dataset, 0)
 
   checkpoint = torch.load(model_checkpoint_fname)
   # print(checkpoint)

@@ -20,6 +20,9 @@ import shap
 from shap_utils import eff_shap
 from eff_shap_utils import Efficient_shap
 
+from reproduce.parameters import (empirical_params,
+                                  checkpoint_save_locat,
+                                  train_save_path)
 sys.path.append("./adult_dataset")
 sys.path.append("./credit_dataset")
 sys.path.append("./")
@@ -172,6 +175,7 @@ def efficient_shap(model_grad, model_for_shap, data_loader, reference,
   return shapley_value_buf, shapley_rank_buf, total_time
 
 
+'''
 parser = argparse.ArgumentParser()
 parser.add_argument("--sample_num", type=int, help="number of samples",
                     default=16)  # for good shapley value ranking
@@ -187,17 +191,20 @@ parser.add_argument("--save", action='store_true',
 
 parser.add_argument("-data", "--dataset", type=str, default='adult')
 args = parser.parse_args()
+'''
+args = empirical_params()
 
 
 if __name__ == "__main__":
 
-  if args.softmax:
-    checkpoint_fname = (
-        "./ckpts/model_softmax_{}_m_1_r_0.pth.tar".format(
-            args.dataset))
-  else:
-    checkpoint_fname = (
-        "./ckpts/model_{}_m_1_r_0.pth.tar".format(args.dataset))
+  # if args.softmax:
+  #   checkpoint_fname = (
+  #       "./ckpts/model_softmax_{}_m_1_r_0.pth.tar".format(
+  #           args.dataset))
+  # else:
+  #   checkpoint_fname = (
+  #       "./ckpts/model_{}_m_1_r_0.pth.tar".format(args.dataset))
+  checkpoint_fname = train_save_path(args.dataset, 0, args.softmax)
   checkpoint = torch.load(checkpoint_fname)
   del checkpoint_fname
 
@@ -258,9 +265,9 @@ if __name__ == "__main__":
         checkpoint["round_index"]) + "_c_" + str(args.circ_num) + ".pth.tar"
     '''
 
-    save_checkpoint_name = (
-        "./ckpts/softmax/efficient_shap_{}_m_1_s_".format(
-            args.dataset))
+    # save_checkpoint_name = (
+    #     "./ckpts/softmax/efficient_shap_{}_m_1_s_".format(
+    #         args.dataset))
 
   else:
     shapley_value, shapley_rank, total_time = efficient_shap(
@@ -276,12 +283,15 @@ if __name__ == "__main__":
         checkpoint["round_index"]) + "_c_" + str(args.circ_num) + ".pth.tar"
     '''
 
-    save_checkpoint_name = (
-        "./ckpts/wo_softmax/efficient_shap_{}_m_1_s_".format(
-            args.dataset))
-  save_checkpoint_name += (str(args.sample_num) + "_r_" +
-                           str(checkpoint["round_index"]) + "_c_" +
-                           str(args.circ_num) + ".pth.tar")
+    # save_checkpoint_name = (
+    #     "./ckpts/wo_softmax/efficient_shap_{}_m_1_s_".format(
+    #         args.dataset))
+  # save_checkpoint_name += (str(args.sample_num) + "_r_" +
+  #                          str(checkpoint["round_index"]) + "_c_" +
+  #                          str(args.circ_num) + ".pth.tar")
+  save_checkpoint_name = checkpoint_save_locat(
+      args.dataset, args.sample_num, checkpoint["round_index"],
+      args.circ_num, args.softmax)
 
   if args.save:
     save_checkpoint(save_checkpoint_name,

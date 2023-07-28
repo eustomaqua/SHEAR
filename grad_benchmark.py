@@ -18,6 +18,8 @@ from captum.attr import *
 import shap
 from shap_utils import eff_shap
 
+from reproduce.parameters import train_save_path
+
 
 def get_second_order_grad(model, x, device=None):
   with torch.set_grad_enabled(True):
@@ -149,6 +151,7 @@ if __name__ == "__main__":
   # elif args.dataset == 'credit':
   #   path = "./credit_dataset"
 
+  '''
   if args.softmax:
     model_checkpoint_fname = (
         "./ckpts/model_softmax_{}_m_1_r_0.pth.tar".format(
@@ -156,6 +159,9 @@ if __name__ == "__main__":
   else:
     model_checkpoint_fname = (
         "./ckpts/model_{}_m_1_r_0.pth.tar".format(args.dataset))
+  '''
+  model_checkpoint_fname = train_save_path(
+      args.dataset, 0, softmax=args.softmax)
 
   '''
   if args.softmax:

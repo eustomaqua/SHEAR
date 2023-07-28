@@ -29,6 +29,7 @@ python grad_benchmark.py
 # chmod +x ?.sh
 ./run_exp_eff_shap.sh    # SHEAR
 ./run_exp_ks.sh          # Kernel-SHAR
+./run_exp_softks.sh      # Kernel-SHAP with Welford algorithm
 ```
 
 ### Evaluating SHEAR
