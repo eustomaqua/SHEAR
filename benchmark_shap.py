@@ -50,10 +50,13 @@ if __name__ == "__main__":
   # parser.add_argument('-iter', '--max-epoch', type=int, default=20)
   args = parser.parse_args()
 
+  '''
   if args.dataset == 'adult':
     path = "./adult_dataset/model_adult_m_1_r_"
   elif args.dataset == 'credit':
     path = "./credit_dataset/model_credit_m_1_r_"
+  '''
+  path = "./ckpts/model_{}_m_1_r_".format(args.dataset)
   model_checkpoint_fname = path + "0.pth.tar"
 
   checkpoint = torch.load(model_checkpoint_fname)

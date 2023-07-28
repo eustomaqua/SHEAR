@@ -151,12 +151,22 @@ if __name__ == "__main__":
 
   if args.softmax:
     model_checkpoint_fname = (
+        "./ckpts/model_softmax_{}_m_1_r_0.pth.tar".format(
+            args.dataset))
+  else:
+    model_checkpoint_fname = (
+        "./ckpts/model_{}_m_1_r_0.pth.tar".format(args.dataset))
+
+  '''
+  if args.softmax:
+    model_checkpoint_fname = (
         "./{}_dataset/model_softmax_{}_m_1_r_0.pth.tar".format(
             args.dataset, args.dataset))
   else:
     model_checkpoint_fname = (
         "./{}_dataset/model_{}_m_1_r_0.pth.tar".format(
             args.dataset, args.dataset))
+  '''
 
   checkpoint = torch.load(model_checkpoint_fname)
 

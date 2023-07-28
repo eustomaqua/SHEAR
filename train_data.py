@@ -98,6 +98,9 @@ if __name__ == "__main__":
     case = Credit()
     path = './credit_dataset/bank-full-dataset.csv'
     ckpt = "./credit_dataset/model_credit_m_1_r_"
+
+  ckpt = './ckpts/model_{}_m_1_r_'.format(args.dataset)
+
   datasets_torch, cate_attrib_book, dense_feat_index, \
       sparse_feat_index = case.load_data(
           path, val_size=0.2, test_size=0.2, run_num=round_num)

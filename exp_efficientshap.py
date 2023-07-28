@@ -190,6 +190,18 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
+
+  if args.softmax:
+    checkpoint_fname = (
+        "./ckpts/model_softmax_{}_m_1_r_0.pth.tar".format(
+            args.dataset))
+  else:
+    checkpoint_fname = (
+        "./ckpts/model_{}_m_1_r_0.pth.tar".format(args.dataset))
+  checkpoint = torch.load(checkpoint_fname)
+  del checkpoint_fname
+
+  '''
   if args.softmax:
     checkpoint = torch.load(
         "./{}_dataset/model_softmax_{}_m_1_r_0.pth.tar".format(
@@ -198,6 +210,7 @@ if __name__ == "__main__":
     checkpoint = torch.load(
         "./{}_dataset/model_{}_m_1_r_0.pth.tar".format(
             args.dataset, args.dataset))
+  '''
 
   dense_feat_index = checkpoint["dense_feat_index"]
   sparse_feat_index = checkpoint["sparse_feat_index"]
@@ -238,10 +251,16 @@ if __name__ == "__main__":
         data_loader, reference, dense_feat_index, sparse_feat_index,
         cate_attrib_book)
 
+    '''
     save_checkpoint_name = (
         "./{}_dataset/softmax/efficient_shap_{}_m_1_s_".format(
             args.dataset, args.dataset)) + str(args.sample_num) + "_r_" + str(
         checkpoint["round_index"]) + "_c_" + str(args.circ_num) + ".pth.tar"
+    '''
+
+    save_checkpoint_name = (
+        "./ckpts/softmax/efficient_shap_{}_m_1_s_".format(
+            args.dataset))
 
   else:
     shapley_value, shapley_rank, total_time = efficient_shap(
@@ -250,10 +269,19 @@ if __name__ == "__main__":
         data_loader, reference, dense_feat_index,
         sparse_feat_index, cate_attrib_book)
 
+    '''
     save_checkpoint_name = (
         "./{}_dataset/wo_softmax/efficient_shap_{}_m_1_s_".format(
             args.dataset, args.dataset)) + str(args.sample_num) + "_r_" + str(
         checkpoint["round_index"]) + "_c_" + str(args.circ_num) + ".pth.tar"
+    '''
+
+    save_checkpoint_name = (
+        "./ckpts/wo_softmax/efficient_shap_{}_m_1_s_".format(
+            args.dataset))
+  save_checkpoint_name += (str(args.sample_num) + "_r_" +
+                           str(checkpoint["round_index"]) + "_c_" +
+                           str(args.circ_num) + ".pth.tar")
 
   if args.save:
     save_checkpoint(save_checkpoint_name,

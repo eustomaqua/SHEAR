@@ -97,6 +97,18 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
+
+  if args.softmax:
+    checkpoint_fname = (
+        "./ckpts/model_softmax_{}_m_1_r_0.pth.tar".format(
+            args.dataset))
+  else:
+    checkpoint_fname = (
+        "./ckpts/model_{}_m_1_r_0.pth.tar".format(args.dataset))
+  checkpoint = torch.load(checkpoint_fname)
+  del checkpoint_fname
+
+  '''
   if args.softmax:
     checkpoint = torch.load(
         "./{}_dataset/model_softmax_{}_m_1_r_0.pth.tar".format(
@@ -105,6 +117,7 @@ if __name__ == "__main__":
     checkpoint = torch.load(
         "./{}_dataset/model_{}_m_1_r_0.pth.tar".format(
             args.dataset, args.dataset))
+  '''
 
   dense_feat_index = checkpoint["dense_feat_index"]
   sparse_feat_index = checkpoint["sparse_feat_index"]
@@ -135,9 +148,9 @@ if __name__ == "__main__":
   # elif args.dataset == 'credit':
   N = shapley_value_gt.shape[0]
   data_loader = DataLoader(TensorDataset(
-        x_test[0: N], y_test[0: N], z_test[0: N], shapley_value_gt,
-        shapley_ranking_gt), batch_size=1, shuffle=False,
-        drop_last=False, pin_memory=True)
+      x_test[0: N], y_test[0: N], z_test[0: N], shapley_value_gt,
+      shapley_ranking_gt), batch_size=1, shuffle=False,
+      drop_last=False, pin_memory=True)
 
   reference_dense = x_test[:, dense_feat_index].mean(dim=0)
   reference_sparse = -torch.ones_like(sparse_feat_index).type(torch.long)
@@ -147,20 +160,34 @@ if __name__ == "__main__":
   if args.softmax:
     imputer = removal.MarginalExtension(
         reference, model_for_shap.forward_softmax_1_np)
+    '''
     save_checkpoint_name = (
         "./{}_dataset/softmax/kernelshap_{}_m_1_s_".format(
             args.dataset, args.dataset) + str(args.sample_num) +
         "_r_" + str(checkpoint["round_index"]) + "_c_" +
         str(args.circ_num) + ".pth.tar")
+    '''
+
+    save_checkpoint_name = (
+        "./ckpts/softmax/kernelshap_{}_m_1_s_".format(args.dataset))
 
   else:
     imputer = removal.MarginalExtension(
         reference, model_for_shap.forward_1_np)
+    '''
     save_checkpoint_name = (
         "./{}_dataset/wo_softmax/kernelshap_{}_m_1_s_".format(
             args.dataset, args.dataset) + str(args.sample_num) +
         "_r_" + str(checkpoint["round_index"]) + "_c_" +
         str(args.circ_num) + ".pth.tar")
+    '''
+
+    save_checkpoint_name = (
+        "./ckpts/wo_softmax/kernelshap_{}_m_1_s_".format(
+            args.dataset))
+  save_checkpoint_name += (str(args.sample_num) + "_r_" +
+                           str(checkpoint["round_index"]) + "_c_" +
+                           str(args.circ_num) + ".pth.tar")
 
   shapley_value, shapley_rank = shapreg_shapley(imputer, data_loader)
 
